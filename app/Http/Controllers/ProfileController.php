@@ -57,4 +57,9 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    public function show(\App\Models\User $user)
+    {
+        return view('users.show', compact('user'));
+    }
+
 }
