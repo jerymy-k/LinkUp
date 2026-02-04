@@ -43,4 +43,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+            ->withTimestamps();
+    }
+
+    public function friendRequestsReceived()
+    {
+        return $this->hasMany(\App\Models\FriendRequest::class, 'receiver_id');
+    }
+
+    public function friendRequestsSent()
+    {
+        return $this->hasMany(\App\Models\FriendRequest::class, 'sender_id');
+    }
+
 }

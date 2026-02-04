@@ -17,7 +17,7 @@ class SearchController extends Controller
             $users = User::query()
                 ->where(function ($query) use ($q) {
                     $query->where('username', 'like', "%{$q}%")
-                          ->orWhere('email', 'like', "%{$q}%");
+                        ->orWhere('email', 'like', "%{$q}%");
                 })
                 ->where('id', '!=', auth()->id())
                 ->orderBy('username')
@@ -25,9 +25,7 @@ class SearchController extends Controller
                 ->withQueryString();
         }
 
-        return view('search.index', [
-            'users' => $users,
-            'q' => $q,
-        ]);
+        return view('search.index', compact('q', 'users'));
+
     }
 }

@@ -1,39 +1,115 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+    <div class="min-h-screen bg-[#f8f6f6] flex flex-col font-['Public_Sans']">
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+        {{-- Top bar --}}
+        <header class="w-full bg-white/80 backdrop-blur-md border-b border-[#f3e7e8] sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-[#1b0e0e]">
+                    <div class="size-6 text-[#ea2a33]">
+                        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold leading-tight tracking-tight">LinkUp</h2>
+                </div>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+                <a href="{{ route('login') }}"
+                   class="text-sm font-bold text-[#ea2a33] hover:underline underline-offset-4">
+                    Log in
+                </a>
+            </div>
+        </header>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        {{-- Main --}}
+        <main class="flex-1 flex items-center justify-center p-6 sm:p-12">
+            <div class="w-full max-w-[540px] bg-white p-8 md:p-12 rounded-xl shadow-2xl shadow-[#ea2a33]/5 border border-[#e7d0d1]">
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                {{-- Headline --}}
+                <div class="mb-10 text-center">
+                    <h1 class="text-[#1b0e0e] text-3xl font-bold tracking-tight mb-2">
+                        Reset password
+                    </h1>
+                    <p class="text-[#4a3a3a] text-base">
+                        Choisis un nouveau mot de passe pour sécuriser ton compte.
+                    </p>
+                </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+                <form method="POST" action="{{ route('password.store') }}" class="space-y-5">
+                    @csrf
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+                    {{-- Token --}}
+                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
+                    {{-- Email --}}
+                    <label class="flex flex-col">
+                        <p class="text-[#1b0e0e] text-sm font-medium pb-2 ml-1">Email Address</p>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value="{{ old('email', $request->email) }}"
+                            required
+                            autofocus
+                            autocomplete="username"
+                            placeholder="name@company.com"
+                            class="w-full rounded-lg border border-[#e7d0d1] bg-[#f8f6f6] text-[#1b0e0e] focus:border-[#ea2a33] focus:ring-1 focus:ring-[#ea2a33] h-12 px-4 text-base transition-all placeholder:text-gray-400"
+                        />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </label>
+
+                    {{-- New Password --}}
+                    <label class="flex flex-col">
+                        <p class="text-[#1b0e0e] text-sm font-medium pb-2 ml-1">New Password</p>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            required
+                            autocomplete="new-password"
+                            placeholder="••••••••"
+                            class="w-full rounded-lg border border-[#e7d0d1] bg-[#f8f6f6] text-[#1b0e0e] focus:border-[#ea2a33] focus:ring-1 focus:ring-[#ea2a33] h-12 px-4 text-base transition-all placeholder:text-gray-400"
+                        />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </label>
+
+                    {{-- Confirm Password --}}
+                    <label class="flex flex-col">
+                        <p class="text-[#1b0e0e] text-sm font-medium pb-2 ml-1">Confirm Password</p>
+                        <input
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            type="password"
+                            required
+                            autocomplete="new-password"
+                            placeholder="••••••••"
+                            class="w-full rounded-lg border border-[#e7d0d1] bg-[#f8f6f6] text-[#1b0e0e] focus:border-[#ea2a33] focus:ring-1 focus:ring-[#ea2a33] h-12 px-4 text-base transition-all placeholder:text-gray-400"
+                        />
+                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                    </label>
+
+                    {{-- Button --}}
+                    <button
+                        type="submit"
+                        class="w-full bg-[#ea2a33] text-white rounded-lg h-14 text-base font-bold tracking-wide shadow-lg shadow-[#ea2a33]/20 hover:bg-[#ea2a33]/90 transition-all mt-4 active:scale-[0.98]"
+                    >
+                        Reset Password
+                    </button>
+                </form>
+
+                {{-- Footer --}}
+                <div class="mt-8 text-center border-t border-[#f3e7e8] pt-6">
+                    <p class="text-xs text-[#994d51]">
+                        Si le lien a expiré, refais “Mot de passe oublié”.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-8 px-10 text-center">
+            <p class="text-[#994d51] text-xs font-medium tracking-wide">
+                © {{ date('Y') }} LINKUP. ALL RIGHTS RESERVED.
+            </p>
+        </footer>
+
+    </div>
 </x-guest-layout>
