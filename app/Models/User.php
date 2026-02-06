@@ -44,20 +44,30 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function sentFriendRequests()
+    {
+        return $this->hasMany(FriendRequest::class, 'sender_id');
+    }
+
+    public function receivedFriendRequests()
+    {
+        return $this->hasMany(FriendRequest::class, 'receiver_id');
+    }
+
     public function friends()
     {
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
             ->withTimestamps();
     }
 
-    public function friendRequestsReceived()
+    public function posts()
     {
-        return $this->hasMany(\App\Models\FriendRequest::class, 'receiver_id');
+        return $this->hasMany(\App\Models\Post::class);
     }
 
-    public function friendRequestsSent()
+    public function comments()
     {
-        return $this->hasMany(\App\Models\FriendRequest::class, 'sender_id');
+        return $this->hasMany(Comment::class);
     }
 
 }

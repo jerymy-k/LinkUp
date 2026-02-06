@@ -47,17 +47,33 @@ class FriendController extends Controller
         return back()->with('success', "Demande envoyée ✅");
     }
 
-    // Liste des demandes reçues
     public function requests()
     {
-        $requests = FriendRequest::with('sender')
-            ->where('receiver_id', auth()->id())
+        $me = auth()->id();
+
+        $requests = FriendRequest::query()
+            ->with('sender')
+            ->where('receiver_id', $me)
             ->where('status', 'pending')
             ->latest()
             ->get();
 
-        return view('friends.requests', compact('requests'));
+
+        $suggestions = User::query()
+            ->where('id', '!=', $me)
+            ->whereDoesntHave('sentFriendRequests', function ($q) use ($me) {
+                $q->where('receiver_id', $me)->where('status', 'pending');
+            })
+            ->whereDoesntHave('receivedFriendRequests', function ($q) use ($me) {
+                $q->where('sender_id', $me)->where('status', 'pending');
+            })
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        return view('friends.requests', compact('requests', 'suggestions'));
     }
+
 
     // Accepter
     public function accept(FriendRequest $request)

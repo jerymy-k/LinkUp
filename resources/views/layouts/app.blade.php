@@ -1,3 +1,10 @@
+@php
+    $pendingFriendRequests = \App\Models\FriendRequest::query()
+        ->where('receiver_id', auth()->id())
+        ->where('status', 'pending')
+        ->count();
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -5,7 +12,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('linkupicon.png') }}?v=1"> 
+    <link rel="icon" href="{{ asset('linkupicon.png') }}?v=1">
     <link rel="apple-touch-icon" href="{{ asset('linkupicon.png') }}?v=1">
 
 
@@ -62,9 +69,9 @@
 
                 {{-- Nav --}}
                 <nav class="flex flex-col gap-1 text-sm ">
-                    <a href="{{ route('dashboard') }}"
+                    <a href="{{ route('home') }}"
                         class="flex items-center gap-3 px-3 py-2 rounded-lg transition
-                   {{ request()->routeIs('dashboard') ? 'bg-[color:rgba(234,42,51,0.10)] text-[var(--primary)]' : 'hover:bg-[var(--border)]' }}">
+                   {{ request()->routeIs('home') ? 'bg-[color:rgba(234,42,51,0.10)] text-[var(--primary)]' : 'hover:bg-[var(--border)]' }}">
                         <span class="material-symbols-outlined text-base">house</span>
                         <span class="font-medium">Home</span>
                     </a>
@@ -83,11 +90,23 @@
                         <span class="font-medium">Profile</span>
                     </a>
                     <a href="{{ route('friends.requests') }}"
-                        class="flex items-center gap-3 px-3 py-2 rounded-lg transition
-                   {{ request()->routeIs('friend.*') ? 'bg-[color:rgba(234,42,51,0.10)] text-[var(--primary)]' : 'hover:bg-[var(--border)]' }}">
-                        <span class="material-symbols-outlined text-base">group</span>
-                        <span class="font-medium">Friends</span>
+                        class="flex items-center justify-between px-3 py-2 rounded-lg transition
+   {{ request()->routeIs('friends.*') ? 'bg-[color:rgba(234,42,51,0.10)] text-[var(--primary)]' : 'hover:bg-[var(--border)]' }}">
+
+                        <span class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-base">group</span>
+                            <span class="font-medium">Friends</span>
+                        </span>
+
+                        {{-- 🔴 Badge --}}
+                        @if($pendingFriendRequests > 0)
+                            <span
+                                class="min-w-6 h-6 px-2 rounded-full bg-[#ea2a33] text-white text-xs font-bold flex items-center justify-center">
+                                {{ $pendingFriendRequests }}
+                            </span>
+                        @endif
                     </a>
+
 
                     {{-- Soon --}}
                     <div class="mt-3 pt-3 border-t border-[var(--border)]">

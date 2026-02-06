@@ -107,7 +107,14 @@ class ProfileController extends Controller
         };
 
 
-        return view('users.show', compact('user', 'friendState', 'incomingRequest'));
+        $posts = \App\Models\Post::query()
+            ->with(['user', 'comments.user'])
+            ->withCount('comments')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        return view('users.show', compact('user', 'posts', 'friendState', 'incomingRequest'));
     }
 
 
